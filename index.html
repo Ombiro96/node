@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" rel="stylesheet" href="style.css" />
+    <title>Inflation</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      fetch('/items').then((res) => res.json()).then((data) =>  {//this line fetches items/data from the json file
+
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawVisualization);
+
+        let itemArray = ['Month']
+        let marchArray = ['March']
+        let aprilArray = ['April']
+        let mayArray = ['May']
+        let juneArray = ['June']
+        let julyArray = ['July']
+
+        for(let i = 0; i< data.length; i+=1) {
+          console.log('data[i]: ', data[i].item)
+          itemArray.push(data[i].item)//creates the data item
+          marchArray.push(parseInt(data[i].price[0], 10))
+          aprilArray.push(parseInt(data[i].price[1], 10))
+          mayArray.push(parseInt(data[i].price[2], 10))
+          juneArray.push(parseInt(data[i].price[3], 10))
+          julyArray.push(parseInt(data[i].price[4], 10))
+        }
+        console.log('marchArray: ', marchArray)
+        console.log('itemArray: ', itemArray)
+        const tableArray = [
+          itemArray,
+          marchArray,
+          aprilArray,
+          mayArray,
+          juneArray,
+          julyArray
+        ]
+
+
+        console.log(parseInt(data.price, 10))
+      function drawVisualization() {
+        // Some raw data (not necessarily accurate)
+        var graph = google.visualization.arrayToDataTable(tableArray);
+
+        var options = {
+          title : 'Infaltion in Kenya',
+          vAxis: {title: 'Price in Kshs'},
+          hAxis: {title: 'Month'},
+          seriesType: 'bars',
+          series: {5: {type: 'line'}}
+        };
+
+        var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
+        chart.draw(graph, options);
+      }
+    })
+
+    </script>
+</head>
+<body>
+  <div style="position: absolute; left: 20%; top: 10%; height: 100%;">
+    <h1>Monthly item inflation graph</h1>
+    <p>Kenya’s inflation rate climbed more than expected<br>
+       and exceeded the ceiling of the central bank’s target range for the first time in almost five years,<br>
+        increasing pressure on policy makers to hike the key interest rate.<br>
+
+      Annual inflation accelerated to 7.9% in June from 7.1% a month earlier,
+      <br> Nairobi-based Kenya National Bureau of Statistics said Thursday in an emailed statement.  
+      <br>That’s the highest level since August 2017. The median estimate of six economists in a Bloomberg survey was 7.7%.
+    Below is a graph showing the same</p>
+    <div id="chart_div" style="width: 900px; height: 500px;"></div>
+    <form action="/items" method="post">
+      <label for="item">Item</label><br>
+      <input type="text" id="item" name="item"><br>
+      <label for="price">Price</label><br>
+      <input type="number" placeholder="March" id="price" name="price">
+      <input type="number" placeholder="April" id="price1" name="price">
+      <input type="number" placeholder="May" id="price2" name="price">
+      <input type="number" placeholder="June" id="price3" name="price">
+      <input type="number" placeholder="July" id="price4" name="price"><br>
+      <input type="submit" value="Submit">
+    </form>
+</div>
+</body>
+</html>
